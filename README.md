@@ -6,6 +6,8 @@ It is very often the case that you need to tune your OpenCV pipeline, from chang
 
 I wrote this to avoid that!
 
+![](cut-opencv-vivo.gif)
+
 ## 1. What you get
 1. An editor where you can type your OpenCV + numpy code. 
 2. In this editor, you already have your pasted image in the variables `src`, and a copy in `img` (like in most of OpenCV's docs). Put your results in the `dst` variable to see it live.
@@ -23,8 +25,6 @@ Next steps:
  3. TBD
  
 ## 3. Getting Started
-
-![](cut-opencv-vivo.gif)
 
 #### 1. Download it:
 ```commandline
