@@ -1,0 +1,7 @@
+name: opencv-vivo-test
+channels:
+  - defaults
+dependencies:
+  - numpy
+  - opencv
+  - pillow
