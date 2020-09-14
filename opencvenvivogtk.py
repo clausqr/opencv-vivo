@@ -16,15 +16,19 @@ import matplotlib.pyplot as plt
 import io
 import urllib, base64
 
+# project imports
+from imgdisplaywindow import ImgDisplayWindow
+
+# fix for importing Gtk 3.0:
+gi.require_version("Gtk", "3.0")
+# noinspection PyPep8
+from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
+
 # For compatibility with cv docs:
 cv = cv2
 
 default_script_file = "placeholder_script.py"
-placeholder_text = "Failed to load placeholder script " + default_script_file
 
-gi.require_version("Gtk", "3.0")
-# noinspection PyPep8
-from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
 
 # noinspection PyCallByClass,PyArgumentList
 class OpenCVenVivoGTK(Gtk.Window):
@@ -73,7 +77,6 @@ class OpenCVenVivoGTK(Gtk.Window):
             s.set_valign(Gtk.Align.START)
             h_scales.append(s)
 
-
         self.add(grid)
 
         grid.attach(button_copy_text, 1, 1, 1, 1)
@@ -100,7 +103,6 @@ class OpenCVenVivoGTK(Gtk.Window):
         for i, s in enumerate(h_scales):
             s.connect("value-changed", self.scale_moved, i)
 
-
         self.scrolled_window.add(self.text_view)
 
         button_copy_text.connect("clicked", self.copy_text)
@@ -114,8 +116,6 @@ class OpenCVenVivoGTK(Gtk.Window):
 
         self.src.show_all()
         self.dst.show_all()
-
-
 
         thread = Thread(target=self.watch_queue)
         thread.daemon = True
