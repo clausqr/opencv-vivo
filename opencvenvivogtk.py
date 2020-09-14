@@ -24,7 +24,7 @@ from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
 # For compatibility with cv docs:
 cv = cv2
 
-default_script_file = "placeholder_script.py"
+default_script_file = "default_script_contents.py"
 
 
 # noinspection PyCallByClass,PyArgumentList
@@ -118,6 +118,11 @@ class OpenCVenVivoGTK(Gtk.Window):
         thread.daemon = True
         print('Starting "watch_queue" thread!')
         thread.start()
+
+    def start(self):
+        self.connect("destroy", Gtk.main_quit)
+        self.show_all()
+        Gtk.main()
 
     def reset_windows_cb(self, *args):
         del self.dst
