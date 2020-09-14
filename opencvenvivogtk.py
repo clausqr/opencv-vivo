@@ -18,6 +18,7 @@ import urllib, base64
 
 # project imports
 from imgdisplaywindow import ImgDisplayWindow
+from sharedevents import EVENTS
 
 # fix for importing Gtk 3.0:
 gi.require_version("Gtk", "3.0")
