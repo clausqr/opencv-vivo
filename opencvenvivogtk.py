@@ -8,17 +8,13 @@ import sys
 import io
 import numpy as np
 import cv2
-from PIL import ImageTk, Image
-import cProfile
+from PIL import Image
 import re
 
-import matplotlib.pyplot as plt
-import io
-import urllib, base64
-
 # project imports
-from imgdisplaywindow import ImgDisplayWindow
 from sharedevents import EVENTS
+from imgprocessdispatcher import ImageProcessorDispatcher
+from imgdisplaywindow import ImgDisplayWindow
 
 # fix for importing Gtk 3.0:
 gi.require_version("Gtk", "3.0")
@@ -53,7 +49,7 @@ class OpenCVenVivoGTK(Gtk.Window):
 
         self.text_buffer = Gtk.TextBuffer()
         self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        self.clipboard.connect('owner-change', self.callBack)
+        self.clipboard.connect('owner-change', self.cb_change_callback)
 
         self.image = Gtk.Image.new_from_icon_name("process-stop", Gtk.IconSize.MENU)
 
@@ -140,7 +136,6 @@ class OpenCVenVivoGTK(Gtk.Window):
         self.parameters_txt[sn] = str(int(scale.get_value()))
         text_modified = re.sub('s'+str(sn+1)+'=([0-9.]*) #@', 's'+str(sn+1)+'=' + self.parameters_txt[sn] + ' #@', text)
 
-
         # print("Horizontal scale is " + self.parameter_txt)
 
         GLib.idle_add(self.text_buffer.set_text, text_modified)
@@ -148,17 +143,15 @@ class OpenCVenVivoGTK(Gtk.Window):
         # GLib.idle_add(self.text_buffer.place_cursor, cursor_iter)
         # vs.set_value(vss)
         # GLib.idle_add(self.scrolled_window.set_vadjustment, vs)
-        #print(vs)
-
+        # print(vs)
 
         self._changed(None)
-
 
     def autograb_toggled_cb(self, *args):
         self.autograb = not self.autograb
         print("seting autograb=", self.autograb)
 
-    def callBack(self, *args):
+    def cb_change_callback(self, *args):
         # print("Clipboard changed. New value = " + self.clipboard.wait_for_text())
         if self.autograb:
 
@@ -176,6 +169,7 @@ class OpenCVenVivoGTK(Gtk.Window):
                                               False, 8, w, h, w * 3)
         return pix.copy()
 
+    @staticmethod
     def image2pixbuf2(im):
         # convert image from BRG to RGB (pnm uses RGB)
         im2 = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
@@ -207,7 +201,6 @@ class OpenCVenVivoGTK(Gtk.Window):
                         print('Exception in watch_queue when calling OpenCVenVivoGTK.watch_queue():\n{!r}'.format(e))
             except:
                 sleep(0.001)
-
 
     def copy_text(self, _):
         text = self.text_buffer.get_text(self.text_buffer.get_start_iter(), self.text_buffer.get_end_iter(), False)
